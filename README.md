@@ -61,7 +61,7 @@ The application features a sleek dark-themed UI inspired by terminal/console int
 - Node.js (v16 or higher)
 - Python (v3.8 or higher)
 - MongoDB instance (local or cloud)
-- Yarn package manager
+- Yarn package manager (or npm)
 
 ### Backend Setup
 
@@ -108,6 +108,10 @@ The application features a sleek dark-themed UI inspired by terminal/console int
    ```bash
    yarn install
    ```
+   or
+   ```bash
+   npm install
+   ```
 
 3. Create a `.env` file in the frontend directory:
    ```env
@@ -118,10 +122,34 @@ The application features a sleek dark-themed UI inspired by terminal/console int
    ```bash
    yarn start
    ```
+   or
+   ```bash
+   npm start
+   ```
 
 5. Open your browser to `http://localhost:3000`
 
 ## Usage
+
+### Running Both Servers
+
+To run both the backend and frontend servers simultaneously:
+
+On Unix/Linux/macOS:
+```bash
+npm start
+```
+
+On Windows:
+```bash
+npm run start:win
+```
+
+This will start both servers:
+- Backend: http://localhost:8000
+- Frontend: http://localhost:3000
+
+### Manual Usage
 
 1. Open the application in your browser
 2. Start with Stage 1 (Caesar Cipher)
@@ -174,6 +202,24 @@ Each stage provides:
 | `/api/session/{id}` | GET    | Get session progress               |
 | `/api/submit`       | POST   | Submit an answer for validation    |
 | `/api/reset`        | POST   | Reset session progress             |
+
+### NPM Scripts
+
+The root package.json includes several helpful scripts:
+
+| Script        | Description                                    |
+|---------------|------------------------------------------------|
+| `npm start`   | Run both backend and frontend (Unix/Linux/macOS)|
+| `npm run start:win` | Run both backend and frontend (Windows)  |
+| `npm run backend`   | Run only the backend server              |
+| `npm run frontend`  | Run only the frontend server (Unix/Linux/macOS)|
+| `npm run frontend:win` | Run only the frontend server (Windows)|
+| `npm run dev`       | Run both servers in development mode (Unix/Linux/macOS)|
+| `npm run dev:win`   | Run both servers in development mode (Windows)|
+| `npm run build`     | Build the frontend application (Unix/Linux/macOS)|
+| `npm run build:win` | Build the frontend application (Windows)|
+
+For more detailed information about running the application, see [RUNNING.md](RUNNING.md).
 
 ### Component Architecture
 
