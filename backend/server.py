@@ -2,6 +2,8 @@ from fastapi import FastAPI, APIRouter, HTTPException
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 import os
 import logging
 from pathlib import Path
@@ -9,6 +11,22 @@ from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
 import uuid
 from datetime import datetime
+
+
+def generate_xor_hex(plaintext: str, key: int = 0x42) -> str:
+    """Generate XOR hex string for Stage 2 challenge."""
+    result = ""
+    for char in plaintext:
+        result += format(ord(char) ^ key, '02x')
+    return result
+
+
+def get_puzzle_payload(puzzle_id: str) -> str:
+    """Get puzzle payload, generating dynamically if needed."""
+    if puzzle_id == "s2":
+        # Generate XOR hex for Stage 2
+        return generate_xor_hex("CYBER NOVA")
+    return None
 
 
 ROOT_DIR = Path(__file__).parent
@@ -21,6 +39,9 @@ db = client[os.environ['DB_NAME']]
 
 # Create the main app without a prefix
 app = FastAPI()
+
+# Mount static files directory
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Create a router with the /api prefix for CTF routes
 api_router = APIRouter(prefix="/api")
@@ -35,10 +56,10 @@ class StatusCheck(BaseModel):
 class StatusCheckCreate(BaseModel):
     client_name: str
 
-# Adding root route directly to app (no prefix)
+# Adding root route to serve the frontend UI
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return FileResponse("static/index.html")
 
 @app.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
@@ -150,7 +171,11 @@ async def ctf_puzzles():
     # Return metadata and payloads required for challenges
     out = []
     for p in PUZZLES:
-        out.append({k: p[k] for k in ["id", "title", "difficulty", "color", "prompt", "payload"]})
+        puzzle_data = {k: p[k] for k in ["id", "title", "difficulty", "color", "prompt", "payload"]}
+        # Generate payload dynamically if needed
+        if puzzle_data["payload"] is None:
+            puzzle_data["payload"] = get_puzzle_payload(p["id"])
+        out.append(puzzle_data)
     return {"puzzles": out}
 
 @api_router.post("/session", response_model=SessionResponse)
