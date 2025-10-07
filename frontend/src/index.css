@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    margin: 0;
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: #0D1117;
+    color: #C9D1D9;
+}
+
+code {
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+@layer base {
+  :root {
+        --background: 221 28% 7%; /* #0D1117 */
+        --foreground: 210 12% 83%; /* #C9D1D9 */
+        --card: 221 28% 7%;
+        --card-foreground: 210 12% 83%;
+        --popover: 221 28% 7%;
+        --popover-foreground: 210 12% 83%;
+        --primary: 120 100% 50%; /* #00FF41 */
+        --primary-foreground: 0 0% 3.9%;
+        --secondary: 349 100% 50%; /* #FF0040 */
+        --secondary-foreground: 0 0% 98%;
+        --muted: 213 13% 12%; /* #161B22 */
+        --muted-foreground: 210 12% 60%;
+        --accent: 17 92% 66%; /* #F78166 */
+        --accent-foreground: 0 0% 9%;
+        --destructive: 349 100% 50%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 210 15% 16%; /* #1F2833 */
+        --input: 210 15% 16%;
+        --ring: 120 100% 50%;
+        --radius: 0.5rem;
+    }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    }
+  body {
+    @apply bg-background text-foreground;
+    }
+}
+
+/* Subtle neon accents */
+.matrix-glow { box-shadow: 0 0 24px rgba(0,255,65,0.15); }
+.cyber-red-glow { box-shadow: 0 0 24px rgba(255,0,64,0.15); }
+
+/* Glitch text effect */
+.glitch {
+  position: relative;
+  display: inline-block;
+}
+.glitch::before, .glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0; top: 0;
+  width: 100%;
+  overflow: hidden;
+}
+.glitch::before { left: 2px; text-shadow: -2px 0 #00FF41; animation: glitch 2s infinite linear alternate-reverse; }
+.glitch::after { left: -2px; text-shadow: 2px 0 #FF0040; animation: glitch 1.5s infinite linear alternate-reverse; }
+@keyframes glitch {
+  0% { clip-path: inset(0 0 85% 0); }
+  20% { clip-path: inset(10% 0 70% 0); }
+  40% { clip-path: inset(40% 0 40% 0); }
+  60% { clip-path: inset(70% 0 10% 0); }
+  80% { clip-path: inset(85% 0 0 0); }
+  100% { clip-path: inset(0 0 85% 0); }
+}
