@@ -1,203 +1,135 @@
 # DarkCTF - Cryptographic Puzzle Challenge
 
-Welcome to DarkCTF, a cryptographic puzzle challenge platform built with modern web technologies. Test your cryptography skills by solving a series of increasingly difficult cipher challenges.
+Welcome to DarkCTF, a cryptographic puzzle challenge platform built with FastAPI that serves both frontend UI and API endpoints through a single port. Test your cryptography skills by solving a series of increasingly difficult cipher challenges.
 
-![DarkCTF Screenshot](./docs/screenshot.png) *(Screenshot placeholder - add actual screenshot)*
+## 🚀 Quick Start (Integrated Single Server)
 
-## Table of Contents
-
-- [About](#about)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Backend Setup](#backend-setup)
-  - [Frontend Setup](#frontend-setup)
-- [Usage](#usage)
-- [Challenge Structure](#challenge-structure)
-- [Development](#development)
-- [Contributing](#contributing)
-- [License](#license)
-
-## About
-
-DarkCTF is a web-based cryptographic challenge platform that presents users with a series of cipher puzzles to solve. Players progress through stages, each with increasing difficulty, unlocking new challenges as they successfully solve the previous ones.
-
-The application features a sleek dark-themed UI inspired by terminal/console interfaces with matrix green and cyber red accents.
-
-## Features
-
-- 🧩 Three progressive cryptographic challenges:
-  - Stage 1: Caesar Cipher
-  - Stage 2: XOR Hexadecimal
-  - Stage 3: Vigenère Cipher
-- 🔐 Progressive unlocking system (solve stages in order)
-- 🏆 Master flag achievement upon completing all challenges
-- 💾 Persistent session progress tracking
-- 🎨 Modern dark theme UI with responsive design
-- 📱 Mobile-friendly interface with collapsible sidebar
-- ⚡ Real-time feedback on submissions
-
-## Tech Stack
-
-### Frontend
-- **React** - JavaScript library for building user interfaces
-- **Tailwind CSS** - Utility-first CSS framework
-- **Shadcn/ui** - Reusable component library
-- **Lucide React** - Icon library
-- **Axios** - HTTP client
-- **Vite** - Fast build tool (configured via Craco)
-
-### Backend
-- **FastAPI** - Modern Python web framework
-- **MongoDB** - NoSQL database for session storage
-- **Motor** - Asynchronous MongoDB driver for Python
-- **Pydantic** - Data validation and settings management
-
-## Getting Started
+The application now runs on a single FastAPI server that serves both the frontend UI and API endpoints.
 
 ### Prerequisites
 
-- Node.js (v16 or higher)
-- Python (v3.8 or higher)
+- Python 3.8+
 - MongoDB instance (local or cloud)
-- Yarn package manager (or npm)
 
-### Backend Setup
+### Setup & Run
 
-1. Navigate to the backend directory:
+1. **Navigate to backend directory**:
    ```bash
    cd backend
    ```
 
-2. Create a virtual environment:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-
-3. Install Python dependencies:
+2. **Install dependencies**:
    ```bash
    pip install -r requirements.txt
    ```
 
-4. Create a `.env` file in the backend directory with the following variables:
+3. **Configure environment**:
+   Create a `.env` file with:
    ```env
    MONGO_URL=mongodb://localhost:27017
    DB_NAME=darkctf
    ```
 
-5. Start the backend server:
+4. **Start the integrated server**:
    ```bash
-   python server.py
-   ```
-   
-   Or with uvicorn:
-   ```bash
-   uvicorn server:app --reload
+   uvicorn server:app --host 0.0.0.0 --port 8000 --reload
    ```
 
-### Frontend Setup
+5. **Access the application**:
+   - Frontend UI: http://localhost:8000/
+   - API Documentation: http://localhost:8000/docs
 
-1. Navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
+## ✨ Features
 
-2. Install dependencies:
-   ```bash
-   yarn install
-   ```
-   or
-   ```bash
-   npm install
-   ```
+- 🔗 **Single Server**: Both UI and API served through one port
+- 🧩 **Three Progressive Challenges**:
+  - Stage 1: Caesar Cipher (Easy)
+  - Stage 2: XOR Hexadecimal (Medium)
+  - Stage 3: Vigenère Cipher (Hard)
+- 🔐 **Sequential Unlocking**: Solve stages in order
+- 🏆 **Master Flag**: Complete all challenges
+- 💾 **Session Persistence**: Track progress with MongoDB
+- 🎨 **Modern UI**: TailwindCSS with cyberpunk theme
+- 📱 **Responsive**: Works on desktop and mobile
 
-3. Create a `.env` file in the frontend directory:
-   ```env
-   REACT_APP_API_URL=http://localhost:8000/api
-   ```
+## 🏗️ Architecture
 
-4. Start the development server:
-   ```bash
-   yarn start
-   ```
-   or
-   ```bash
-   npm start
-   ```
+### Single Server Approach
+- **FastAPI** serves both static files (HTML/CSS/JS) and API endpoints
+- **Static file middleware** handles frontend assets
+- **API routes** prefixed with `/api` for clean separation
+- **Single port** (8000) for all services
 
-5. Open your browser to `http://localhost:3000`
+### Technology Stack
+- **Backend**: FastAPI, Python 3.8+, Motor (MongoDB)
+- **Frontend**: HTML5, TailwindCSS (CDN), Vanilla JavaScript
+- **Database**: MongoDB for session storage
+- **Deployment**: Single server instance
 
-## Usage
+## 🎯 Challenge Details
 
-### Running Both Servers
+| Stage | Cipher Type | Difficulty | Payload Example |
+|-------|-------------|------------|-----------------|
+| 1 | Caesar Cipher | Easy | `QHRQ PDWULA` |
+| 2 | XOR Hex | Medium | Dynamic hex generation |
+| 3 | Vigenère | Hard | Custom cipher text |
 
-To run both the backend and frontend servers simultaneously:
+## 🔌 API Endpoints
 
-On Unix/Linux/macOS:
-```bash
-npm start
-```
+### Frontend
+- `GET /` - Serves the main UI (index.html)
 
-On Windows:
-```bash
-npm run start:win
-```
+### API Routes (prefixed with `/api`)
+- `GET /api/puzzles` - Get all challenge puzzles
+- `POST /api/session` - Create or resume a session  
+- `GET /api/session/{session_id}` - Get session progress
+- `POST /api/submit` - Submit answer for a challenge
+- `POST /api/reset` - Reset session progress
 
-This will start both servers:
-- Backend: http://localhost:8000
-- Frontend: http://localhost:3000
-
-### Manual Usage
-
-1. Open the application in your browser
-2. Start with Stage 1 (Caesar Cipher)
-3. Enter the decrypted phrase to solve the challenge
-4. Receive a flag upon successful completion
-5. Progress to the next unlocked stage
-6. Solve all three stages to unlock the Master Flag
-
-## Challenge Structure
-
-| Stage | Cipher Type    | Difficulty | Color Code |
-|-------|----------------|------------|------------|
-| 1     | Caesar Cipher  | Easy       | #00FF41    |
-| 2     | XOR Hex        | Medium     | #F78166    |
-| 3     | Vigenère Cipher| Hard       | #FF0040    |
-
-Each stage provides:
-- A descriptive prompt
-- An encrypted payload to decrypt
-- Validation against the expected answer
-- A unique flag upon successful completion
-
-## Development
+## 🛠️ Development
 
 ### Project Structure
-
 ```
 .
 ├── backend/
 │   ├── server.py         # Main FastAPI application
+│   ├── static/
+│   │   └── index.html    # Frontend UI with TailwindCSS
 │   ├── requirements.txt  # Python dependencies
-│   └── .env             # Environment variables
-├── frontend/
-│   ├── src/
-│   │   ├── components/   # Reusable UI components
-│   │   ├── pages/        # Page components
-│   │   ├── mock/         # Mock data for frontend
-│   │   └── hooks/        # Custom React hooks
-│   ├── public/           # Static assets
 │   └── .env             # Environment variables
 └── README.md
 ```
 
-### API Endpoints
+### Key Changes from Multi-Server Setup
+- ✅ **Single server** instead of separate frontend/backend
+- ✅ **TailwindCSS via CDN** instead of npm package
+- ✅ **Vanilla JavaScript** instead of React
+- ✅ **Static file serving** instead of separate dev server
+- ✅ **Simplified deployment** with one process
 
-| Endpoint            | Method | Description                        |
-|---------------------|--------|------------------------------------|
-| `/api/puzzles`      | GET    | Retrieve puzzle metadata           |
+### Development Tips
+- Use `--reload` flag for auto-restart on code changes
+- Check `/docs` endpoint for interactive API documentation
+- Monitor terminal logs for debugging
+- Test API endpoints with curl or browser dev tools
+
+## 🚀 Production Deployment
+
+```bash
+uvicorn server:app --host 0.0.0.0 --port 8000 --workers 4
+```
+
+## 🔧 Configuration
+
+Environment variables in `.env`:
+```env
+MONGO_URL=mongodb://localhost:27017
+DB_NAME=darkctf
+```
+
+---
+
+**Note**: This is the integrated single-server version. For the original multi-server React + FastAPI setup, please check the git history.
 | `/api/session`      | POST   | Create or retrieve a game session  |
 | `/api/session/{id}` | GET    | Get session progress               |
 | `/api/submit`       | POST   | Submit an answer for validation    |
